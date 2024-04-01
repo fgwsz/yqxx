@@ -4,8 +4,8 @@
 #include<unordered_map>//std::unordered_map
 #include"system_ext.h"
 #include"handle_info.h"
-void callback_handle_city_info(void);
-void callback_handle_province_info(void);
+void callback_handle_a_city_info_text(void);
+void callback_handle_a_province_info_text(void);
 void callback_data_file_make(void);
 void callback_data_file_open(void);
 void callback_add_a_city_info_text(void);
@@ -20,8 +20,8 @@ void callback_total_date_range_infos(void);
 void callback_total_date_range_infos_and_set_clipboard(void);
 void callback_quit(void);
 std::unordered_map<std::string,void(*)(void)>const callback_map={
-    {std::string("hc" ),&callback_handle_city_info},
-    {std::string("hp" ),&callback_handle_province_info},
+    {std::string("hc" ),&callback_handle_a_city_info_text},
+    {std::string("hp" ),&callback_handle_a_province_info_text},
     {std::string("fm" ),&callback_data_file_make},
     {std::string("fo" ),&callback_data_file_open},
     {std::string("act"),&callback_add_a_city_info_text},
@@ -36,24 +36,25 @@ std::unordered_map<std::string,void(*)(void)>const callback_map={
     {std::string("trs"),&callback_total_date_range_infos_and_set_clipboard},
     {std::string("q"  ),&callback_quit}
 };
-std::string const callback_info_string=R"(
-====command==callback====================================
-    hc       handle city info
-    hp       handle province info
+std::string const callback_info_string=
+R"(Take ./input.txt as program input file.
+====command==callback===========================================================
+    hc       handle a city info text(input text read from input file)
+    hp       handle a province info text(input text read from input file)
     fm       data file make
     fo       data file open
-    act      add a city info text
-    aci      add a city info image
-    rc       remove a city info
-    apt      add a province info text
-    api      add a province info image
-    rp       remove a province info
-    tt       total today infos
-    tts      total today infos and set clipboard
-    tr       total date range infos
-    trs      total date range infos and set clipboard
+    act      add a city info text(input from clipboard,output to data file)
+    aci      add a city info image(input from clipboard,output to data file)
+    rc       remove a city info(in data file)
+    apt      add a province info text(input from clipboard,output to data file)
+    api      add a province info image(input from clipboard,output to data file)
+    rp       remove a province info(in data file)
+    tt       total today infos(in data file)
+    tts      total today infos(in data file)and set clipboard
+    tr       total date range infos(in data file)
+    trs      total date range infos(in data file)and set clipboard
     q        quit
-=========================================================
+================================================================================
 )";
 static std::filesystem::path root_path;
 static std::filesystem::path input_path;
@@ -66,6 +67,7 @@ int main(int argc,char** argv){
     std::string command;
     while(true){
         command.clear();
+        system_ext::shell_exec("cls");
         std::cout
             <<callback_info_string
             <<"input command> "
@@ -74,18 +76,18 @@ int main(int argc,char** argv){
         if(callback_map.count(command)>0){
             (callback_map.at(command))();
         }
-        std::cout<<"press a key to continue> ";
+        std::cout<<"press a key to continue ··· ···";
         std::getline(std::cin,command);
     }
     return 0;
 }
-void callback_handle_city_info(){
+void callback_handle_a_city_info_text(){
     std::string input_string=system_ext::read_file(input_path);
     if(input_string.empty()){
         std::cout<<__func__<<":"<<"input_string is empty.\n";
         return;
     }
-    auto result=handle_city_info(input_string);
+    auto result=handle_a_city_info_text(input_string);
     std::string output_string=
         result.title+"\n"+
         result.url+"\n";
@@ -96,13 +98,13 @@ void callback_handle_city_info(){
         return;
     }
 }
-void callback_handle_province_info(){
+void callback_handle_a_province_info_text(){
     std::string input_string=system_ext::read_file(input_path);
     if(input_string.empty()){
         std::cout<<__func__<<":"<<"input_string is empty.\n";
         return;
     }
-    auto result=handle_province_info(input_string);
+    auto result=handle_a_province_info_text(input_string);
     std::string output_string=
         result.title+"\n"+
         result.url+"\n";

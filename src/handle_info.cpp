@@ -1,7 +1,7 @@
 #include"handle_info.h"
 #include"string_ext.h"
 #include<cctype>//std::isspace
-HandleResult handle_city_info(std::string const& city_info){
+HandleResult handle_a_city_info_text(std::string const& city_info){
     std::regex const url_pattern(R"(https?://[^\s/$.?#].[^\s]*)");
     auto match_ret=string_ext::match_all(city_info,url_pattern);
     if(match_ret.empty()){
@@ -88,7 +88,7 @@ HandleResult handle_city_info(std::string const& city_info){
     // 处理结束返回标题和链接
     return {location+"："+title,url};
 }
-HandleResult handle_province_info(std::string const& province_info){
+HandleResult handle_a_province_info_text(std::string const& province_info){
     std::regex const url_pattern(R"(https?://[^\s/$.?#].[^\s]*)");
     auto match_ret=string_ext::match_all(province_info,url_pattern);
     if(match_ret.empty()){
