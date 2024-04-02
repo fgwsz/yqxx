@@ -4,9 +4,9 @@
 #include<unordered_map>//std::unordered_map
 #include"system_ext.h"
 #include"handle_info.h"
+void data_file_make(void);
 void callback_handle_a_city_info_text(void);
 void callback_handle_a_province_info_text(void);
-void callback_data_file_make(void);
 void callback_data_file_open(void);
 void callback_add_a_city_info_text(void);
 void callback_add_a_city_info_image(void);
@@ -20,39 +20,37 @@ void callback_total_date_range_infos(void);
 void callback_total_date_range_infos_and_set_clipboard(void);
 void callback_quit(void);
 std::unordered_map<std::string,void(*)(void)>const callback_map={
-    {std::string("hc" ),&callback_handle_a_city_info_text},
-    {std::string("hp" ),&callback_handle_a_province_info_text},
-    {std::string("fm" ),&callback_data_file_make},
-    {std::string("fo" ),&callback_data_file_open},
-    {std::string("act"),&callback_add_a_city_info_text},
-    {std::string("aci"),&callback_add_a_city_info_image},
-    {std::string("rc" ),&callback_remove_a_city_info},
-    {std::string("apt"),&callback_add_a_province_info_text},
-    {std::string("api"),&callback_add_a_province_info_image},
-    {std::string("rp" ),&callback_remove_a_province_info},
-    {std::string("tt" ),&callback_total_today_infos},
-    {std::string("tts"),&callback_total_today_infos_and_set_clipboard},
-    {std::string("tr" ),&callback_total_date_range_infos},
-    {std::string("trs"),&callback_total_date_range_infos_and_set_clipboard},
-    {std::string("q"  ),&callback_quit}
+    {std::string("o" ),&callback_data_file_open},
+    {std::string("ch"),&callback_handle_a_city_info_text},
+    {std::string("ct"),&callback_add_a_city_info_text},
+    {std::string("ci"),&callback_add_a_city_info_image},
+    {std::string("cr"),&callback_remove_a_city_info},
+    {std::string("ph"),&callback_handle_a_province_info_text},
+    {std::string("pt"),&callback_add_a_province_info_text},
+    {std::string("pi"),&callback_add_a_province_info_image},
+    {std::string("pr"),&callback_remove_a_province_info},
+    {std::string("t" ),&callback_total_today_infos},
+    {std::string("ts"),&callback_total_today_infos_and_set_clipboard},
+    {std::string("r" ),&callback_total_date_range_infos},
+    {std::string("rs"),&callback_total_date_range_infos_and_set_clipboard},
+    {std::string("q" ),&callback_quit}
 };
 std::string const callback_info_string=
 R"(Take ./input.txt as program input file.
 ====command==callback===========================================================
-    hc       handle a city info text(input text read from input file)
-    hp       handle a province info text(input text read from input file)
-    fm       data file make
-    fo       data file open
-    act      add a city info text(input from clipboard,output to data file)
-    aci      add a city info image(input from clipboard,output to data file)
-    rc       remove a city info(in data file)
-    apt      add a province info text(input from clipboard,output to data file)
-    api      add a province info image(input from clipboard,output to data file)
-    rp       remove a province info(in data file)
-    tt       total today infos(in data file)
-    tts      total today infos(in data file)and set clipboard
-    tr       total date range infos(in data file)
-    trs      total date range infos(in data file)and set clipboard
+    o        data file open
+    ch       handle a city info text(input text read from input file)
+    ct       add a city info text(input from clipboard,output to data file)
+    ci       add a city info image(input from clipboard,output to data file)
+    cr       remove a city info(in data file)
+    ph       handle a province info text(input text read from input file)
+    pt       add a province info text(input from clipboard,output to data file)
+    pi       add a province info image(input from clipboard,output to data file)
+    pr       remove a province info(in data file)
+    t        total today infos(in data file)
+    ts       total today infos(in data file)and set clipboard
+    r        total date range infos(in data file)
+    rs       total date range infos(in data file)and set clipboard
     q        quit
 ================================================================================
 )";
@@ -64,6 +62,7 @@ int main(int argc,char** argv){
     if(!system_ext::create_file(input_path)){
         return -1;
     }
+    data_file_make();
     std::string command;
     while(true){
         command.clear();
@@ -76,10 +75,13 @@ int main(int argc,char** argv){
         if(callback_map.count(command)>0){
             (callback_map.at(command))();
         }
-        std::cout<<"press a key to continue ··· ···";
+        std::cout<<"press a key to continue··· ···";
         std::getline(std::cin,command);
     }
     return 0;
+}
+void data_file_make(void){
+    system_ext::shell_exec("python "+(root_path/"data_file_make.py").string());
 }
 void callback_handle_a_city_info_text(){
     std::string input_string=system_ext::read_file(input_path);
@@ -114,9 +116,6 @@ void callback_handle_a_province_info_text(){
         std::cout<<__func__<<":"<<"clean input file error.\n";
         return;
     }
-}
-void callback_data_file_make(void){
-    system_ext::shell_exec("python "+(root_path/"data_file_make.py").string());
 }
 void callback_data_file_open(void){
     system_ext::shell_exec("python "+(root_path/"data_file_open.py").string());
