@@ -36,13 +36,13 @@ std::unordered_map<std::string,void(*)(void)>const callback_map={
     {std::string("q" ),&callback_quit}
 };
 std::string const callback_info_string=
-R"(+command-callback-----------------------------------------------------------+
-|o      |today data file open(./${date}.docx)                               |
-|ch     |handle a city info text(read from ./input.txt)                     |
+R"(+command=callback===========================================================+
+|o      |today data file{./${date}.docx} open                               |
+|ch     |handle a city info text(read from input file{./input.txt})         |
 |ct     |add a city info text(input from clipboard,output to data file)     |
 |ci     |add a city info image(input from clipboard,output to data file)    |
 |cr     |remove a city info(in data file)                                   |
-|ph     |handle a province info text(read from ./input.txt)                 |
+|ph     |handle a province info text(read from input file{./input.txt})     |
 |pt     |add a province info text(input from clipboard,output to data file) |
 |pi     |add a province info image(input from clipboard,output to data file)|
 |pr     |remove a province info(in data file)                               |
@@ -51,7 +51,7 @@ R"(+command-callback-----------------------------------------------------------+
 |r      |total date range infos(in data file)                               |
 |rs     |total date range infos(in data file)and set clipboard              |
 |q      |quit                                                               |
-+command-callback-----------------------------------------------------------+
++command=callback===========================================================+
 )";
 static std::filesystem::path root_path;
 static std::filesystem::path input_path;
@@ -76,8 +76,6 @@ int main(int argc,char** argv){
         if(callback_map.count(command)>0){
             (callback_map.at(command))();
         }
-        std::cout<<"press a key to continue ··· ··· ";
-        std::getline(std::cin,command);
     }
     return 0;
 }
@@ -94,12 +92,15 @@ void callback_handle_a_city_info_text(){
     std::string output_string=
         result.title+"\n"+
         result.url+"\n";
-    system_ext::open_url(result.url);
     system_ext::set_clipboard(output_string);
+    std::cout<<"set clipboard:\n"<<output_string;
+    system_ext::open_url(result.url);
+    std::cout<<"open url:\n"<<result.url<<"\n";
     if(!system_ext::clean_file(input_path)){
         std::cout<<__func__<<":"<<"clean input file error.\n";
         return;
     }
+    std::cout<<"clean input file.\n";
 }
 void callback_handle_a_province_info_text(){
     std::string input_string=system_ext::read_file(input_path);
@@ -111,12 +112,15 @@ void callback_handle_a_province_info_text(){
     std::string output_string=
         result.title+"\n"+
         result.url+"\n";
-    system_ext::open_url(result.url);
     system_ext::set_clipboard(output_string);
+    std::cout<<"set clipboard:\n"<<output_string;
+    system_ext::open_url(result.url);
+    std::cout<<"open url:\n"<<result.url<<"\n";
     if(!system_ext::clean_file(input_path)){
         std::cout<<__func__<<":"<<"clean input file error.\n";
         return;
     }
+    std::cout<<"clean input file.\n";
 }
 void callback_data_file_open(void){
     system_ext::shell_exec("python "+(root_path/"data_file_open.py").string());
