@@ -36,23 +36,22 @@ std::unordered_map<std::string,void(*)(void)>const callback_map={
     {std::string("q" ),&callback_quit}
 };
 std::string const callback_info_string=
-R"(Take ./input.txt as program input file.
-====command==callback===========================================================
-    o        data file open
-    ch       handle a city info text(input text read from input file)
-    ct       add a city info text(input from clipboard,output to data file)
-    ci       add a city info image(input from clipboard,output to data file)
-    cr       remove a city info(in data file)
-    ph       handle a province info text(input text read from input file)
-    pt       add a province info text(input from clipboard,output to data file)
-    pi       add a province info image(input from clipboard,output to data file)
-    pr       remove a province info(in data file)
-    t        total today infos(in data file)
-    ts       total today infos(in data file)and set clipboard
-    r        total date range infos(in data file)
-    rs       total date range infos(in data file)and set clipboard
-    q        quit
-================================================================================
+R"(+command-callback-----------------------------------------------------------+
+|o      |today data file open(./${date}.docx)                               |
+|ch     |handle a city info text(read from ./input.txt)                     |
+|ct     |add a city info text(input from clipboard,output to data file)     |
+|ci     |add a city info image(input from clipboard,output to data file)    |
+|cr     |remove a city info(in data file)                                   |
+|ph     |handle a province info text(read from ./input.txt)                 |
+|pt     |add a province info text(input from clipboard,output to data file) |
+|pi     |add a province info image(input from clipboard,output to data file)|
+|pr     |remove a province info(in data file)                               |
+|t      |total today infos(in data file)                                    |
+|ts     |total today infos(in data file)and set clipboard                   |
+|r      |total date range infos(in data file)                               |
+|rs     |total date range infos(in data file)and set clipboard              |
+|q      |quit                                                               |
++command-callback-----------------------------------------------------------+
 )";
 static std::filesystem::path root_path;
 static std::filesystem::path input_path;
@@ -64,18 +63,20 @@ int main(int argc,char** argv){
     }
     data_file_make();
     std::string command;
+    std::string last_command;
     while(true){
         command.clear();
-        system_ext::shell_exec("cls");
         std::cout
             <<callback_info_string
+            <<"last command: "<<last_command<<"\n"
             <<"input command> "
         ;
         std::getline(std::cin,command);
+        last_command=command;
         if(callback_map.count(command)>0){
             (callback_map.at(command))();
         }
-        std::cout<<"press a key to continue··· ···";
+        std::cout<<"press a key to continue ··· ··· ";
         std::getline(std::cin,command);
     }
     return 0;

@@ -34,7 +34,7 @@ HandleResult handle_a_city_info_text(std::string const& city_info){
         std::string("单位：山东省德州市平原县委宣传部")
     );
     // 查找属地信息
-    std::string const location_match_list[]={
+    std::string const location_list[]={
         "德城",
         "陵城",
         "禹城",
@@ -46,34 +46,19 @@ HandleResult handle_a_city_info_text(std::string const& city_info){
         "庆云",
         "宁津",
         "齐河",
-        "天衢",
-        "德州"
+        "天衢"
     };
-    // 如果标题中含有属地信息那么为如下的对应下标的对应值
-    // 如果不含有属地信息那么直接赋值为最后一项
-    std::string const location_result_list[]={
-        "德州德城",
-        "德州陵城",
-        "德州禹城",
-        "德州乐陵",
-        "德州临邑",
-        "德州平原",
-        "德州夏津",
-        "德州武城",
-        "德州庆云",
-        "德州宁津",
-        "德州齐河",
-        "德州天衢",
-        "德州"
-    };
-    std::string location_default="德州";
-    std::string location;
-    for(size_t index=0;auto const& location_match:location_match_list){
-        if(title.find(location_match)!=title.npos){
-            location=location_result_list[index];
-            break;
+    std::string const location_default={"德州"};
+    std::string location=location_default;
+    for(size_t location_count=0;auto const& location_item:location_list){
+        if(title.find(location_item)!=title.npos){
+            if(location_count==0){
+                location=location_item;
+            }else{
+                location.append("、").append(location_item);
+            }
+            ++location_count;
         }
-        ++index;
     }
     // 删除标题中的无效信息
     // 3.标题：and 链接：and （如果能找到摘要的话）摘要：以及该行之后的全部信息
