@@ -1,2 +1,4 @@
 /build
 /*.exe
+/2*.doc
+/*.docx
