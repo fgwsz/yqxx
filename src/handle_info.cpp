@@ -33,6 +33,10 @@ HandleResult handle_a_city_info_text(std::string const& city_info){
         title,
         std::string("单位：山东省德州市平原县委宣传部")
     );
+    string_ext::remove_all(
+        title,
+        std::string("单位:山东省德州市平原县委宣传部")
+    );
     // 查找属地信息
     std::string const location_list[]={
         "德城",
@@ -63,9 +67,17 @@ HandleResult handle_a_city_info_text(std::string const& city_info){
     // 删除标题中的无效信息
     // 3.标题：and 链接：and （如果能找到摘要的话）摘要：以及该行之后的全部信息
     string_ext::remove_all(title,std::string("标题："));
+    string_ext::remove_all(title,std::string("标题:"));
     string_ext::remove_all(title,std::string("链接："));
+    string_ext::remove_all(title,std::string("链接:"));
     do{
         std::size_t index=title.find("摘要：");
+        if(index!=title.npos){
+            title.erase(index,title.npos);
+        }
+    }while(0);
+    do{
+        std::size_t index=title.find("摘要:");
         if(index!=title.npos){
             title.erase(index,title.npos);
         }
