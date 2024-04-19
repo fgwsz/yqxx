@@ -2,6 +2,7 @@
 #include<string>//std::string std::getline
 #include<iostream>//std::cin std::cout
 #include<unordered_map>//std::unordered_map
+#include"string_ext.h"
 #include"system_ext.h"
 #include"handle_info.h"
 void data_file_make(void);
@@ -72,6 +73,12 @@ int main(int argc,char** argv){
             <<"input command> "
         ;
         std::getline(std::cin,command);
+        string_ext::remove_all(
+            command,
+            [](char ch)->bool{
+                return std::isspace(ch);
+            }
+        );
         last_command=command;
         if(callback_map.count(command)>0){
             (callback_map.at(command))();
